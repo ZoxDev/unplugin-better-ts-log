@@ -1,3 +1,6 @@
+import type { FilterPattern } from 'unplugin'
+
 export interface Options {
-  // define your plugin options here
+  include?: FilterPattern | undefined
+  exclude?: FilterPattern | undefined
 }
