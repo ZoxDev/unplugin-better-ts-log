@@ -1,34 +1,30 @@
-import { Node, Project, ts } from "ts-morph";
+import { Node, type SourceFile, ts } from "ts-morph";
 
-export function betterLog(fileSource: string): Array<string> {
-	const project = new Project();
-	const sourceFile = project.addSourceFileAtPath(fileSource);
-
-	const replaceTexts: Array<string> = [];
-
-	sourceFile.forEachChild((node) => {
-		const firstChild = node.getFirstChild();
-
-		if (Node.isCallExpression(firstChild)) {
-			const expression = firstChild.getExpressionIfKind(
+export function betterLogTransform(sourceFile: SourceFile): string {
+	sourceFile.forEachDescendant((node) => {
+		if (Node.isCallExpression(node)) {
+			const expression = node.getExpressionIfKind(
 				ts.SyntaxKind.PropertyAccessExpression,
 			);
 
 			if (!expression) return;
 			if (!isConsoleLog(expression.getFullText())) return;
 
-			const args = firstChild.getArguments().map((arg) => {
+			const args = node.getArguments().map((arg) => {
 				return arg.getFullText();
 			});
 
-			const replaceText = `console.log("from: ${generateVsCodeLink(fileSource, firstChild.getStartLineNumber(), firstChild.getStartLinePos())}, ts-pos: (${sourceFile.getPos()}) --> ", ${argumentsMap(args)})`;
-			firstChild.replaceWithText(replaceText);
+			const { line: expressionLine, column: expressionColumn } =
+				sourceFile.getLineAndColumnAtPos(expression.getStart());
 
-			return replaceTexts.push(replaceText);
+			const replaceText = `console.log("from: ${generateVsCodeLink(sourceFile.getFilePath(), expressionLine, expressionColumn)} --> ", ${argumentsMap(args)})`;
+			node.replaceWithText(replaceText);
 		}
+
+		return;
 	});
 
-	return replaceTexts;
+	return sourceFile.getText();
 }
 
 function isConsoleLog(text: string): boolean {
@@ -38,7 +34,7 @@ function isConsoleLog(text: string): boolean {
 		"console.error",
 		"console.time",
 		"console.debug",
-	].includes(text);
+	].some((value) => text.includes(value));
 }
 
 function generateVsCodeLink(

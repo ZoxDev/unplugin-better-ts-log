@@ -5,13 +5,13 @@
 	"packageManager": "pnpm@10.11.0",
 	"description": "",
 	"license": "MIT",
-	"homepage": "https://github.com/antfu/unplugin-starter#readme",
+	"homepage": "https://github.com/ZoxDev/unplugin-better-ts-log#readme",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/antfu/unplugin-starter.git"
+		"url": "git+https://github.com/ZoxDev/unplugin-better-ts-log.git"
 	},
 	"bugs": {
-		"url": "https://github.com/antfu/unplugin-starter/issues"
+		"url": "https://github.com/ZoxDev/unplugin-better-ts-log/issues"
 	},
 	"keywords": [
 		"unplugin",

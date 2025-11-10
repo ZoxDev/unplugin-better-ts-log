@@ -1,26 +1,39 @@
-import type { UnpluginFactory } from 'unplugin'
-import type { Options } from './types'
-import { createUnplugin } from 'unplugin'
-import { betterLog } from './better-log'
+import { Project } from "ts-morph";
+import type { UnpluginFactory } from "unplugin";
+import { createUnplugin } from "unplugin";
+import { betterLogTransform } from "./better-log";
+import type { Options } from "./types";
 
-export const unpluginFactory: UnpluginFactory<Options | undefined> = options => (
+export const unpluginFactory: UnpluginFactory<Options | undefined> = (
+	options,
+) => {
+	const project = new Project();
 
-  {
-    name: 'unplugin-starter',
-    transform: {
-      filter: {
-        id: {
-          exclude: options?.exclude,
-          include: options?.include,
-        },
-      },
-      handler(_code, id) {
-        betterLog(id)
-      },
-    },
-  }
-)
+	return {
+		name: "unplugin-better-ts-log",
+		transform: {
+			filter: {
+				id: {
+					exclude: options?.exclude,
+					include: options?.include,
+				},
+			},
+			handler(code, id) {
+				const sourceFile = project.createSourceFile(id, code, {
+					overwrite: true,
+				});
 
-export const unplugin = /* #__PURE__ */ createUnplugin(unpluginFactory)
+				console.log(sourceFile.getFilePath());
 
-export default unplugin
+				const newCode = betterLogTransform(sourceFile);
+				return {
+					code: newCode,
+				};
+			},
+		},
+	};
+};
+
+export const unplugin = /* #__PURE__ */ createUnplugin(unpluginFactory);
+
+export default unplugin;
