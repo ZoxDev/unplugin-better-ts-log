@@ -15,7 +15,7 @@ export function betterLogTransform(sourceFile: SourceFile): string {
 			});
 
 			const { line: expressionLine, column: expressionColumn } =
-				sourceFile.getLineAndColumnAtPos(expression.getStart());
+				sourceFile.getLineAndColumnAtPos(expression.getStartLinePos());
 
 			const replaceText = `console.log("from: ${generateVsCodeLink(sourceFile.getFilePath(), expressionLine, expressionColumn)} --> ", ${argumentsMap(args)})`;
 			node.replaceWithText(replaceText);

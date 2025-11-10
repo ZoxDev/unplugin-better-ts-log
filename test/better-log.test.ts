@@ -52,7 +52,7 @@ describe("better log tests", () => {
 			console.log("from: vscode://file//Users/mathiasbarczewski/projects/unplugin-better-ts-log/test/test-files/whitespace.fake-file.ts:5:1 --> ", "white-sapce");
 
 			const _ = () => {
-				console.log("from: vscode://file//Users/mathiasbarczewski/projects/unplugin-better-ts-log/test/test-files/whitespace.fake-file.ts:8:2 --> ", "white-sapce");
+				console.log("from: vscode://file//Users/mathiasbarczewski/projects/unplugin-better-ts-log/test/test-files/whitespace.fake-file.ts:8:1 --> ", "white-sapce");
 			};
 			"
 		`);
