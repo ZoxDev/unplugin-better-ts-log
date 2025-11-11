@@ -1,8 +1,23 @@
-# unplugin-better-ts-log
+## unplugin-better-ts-log
 
 This plugin aim to enhance your dev tools log experience.
 
-## Install
+## How it works ?
+
+Just install the plugin and then your console log should transform with a vscode deeplink : 
+
+don't forget to include the files to transform.
+```ts
+		betterTsLog({
+      exclude: './node_modules'
+			include: './src',
+		}),
+```
+
+- from : `console.log(123, ["123"], "123", { test: "test" });`
+- to : `console.log("from: vscode://file//Users/your-user/projects/unplugin-better-ts-log/src/log.ts:1:1 --> ", 123,  ["123"],  "123",  { test: "test" });`
+
+### Install
 
 ```bash
 npm i unplugin-better-ts-log

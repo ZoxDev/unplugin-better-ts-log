@@ -1,5 +1,6 @@
 import { Node, type SourceFile, ts } from "ts-morph";
 
+// TODO: make the deeplink work
 export function betterLogTransform(sourceFile: SourceFile): string {
 	sourceFile.forEachDescendant((node) => {
 		if (Node.isCallExpression(node)) {
@@ -8,7 +9,7 @@ export function betterLogTransform(sourceFile: SourceFile): string {
 			);
 
 			if (!expression) return;
-			if (!isConsoleLog(expression.getFullText())) return;
+			if (!isConsoleLog(expression.getText())) return;
 
 			const args = node.getArguments().map((arg) => {
 				return arg.getFullText();
@@ -17,7 +18,9 @@ export function betterLogTransform(sourceFile: SourceFile): string {
 			const { line: expressionLine, column: expressionColumn } =
 				sourceFile.getLineAndColumnAtPos(expression.getStartLinePos());
 
-			const replaceText = `console.log("from: ${generateVsCodeLink(sourceFile.getFilePath(), expressionLine, expressionColumn)} --> ", ${argumentsMap(args)})`;
+			const replaceText = `${expression.getText()}("from: ${generateVsCodeLink(sourceFile.getFilePath(), expressionLine, expressionColumn)} --> ", ${argumentsMap(args)})`;
+			console.log(replaceText);
+
 			node.replaceWithText(replaceText);
 		}
 
